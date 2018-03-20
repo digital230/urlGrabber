@@ -1,7 +1,16 @@
+document.addEventListener('load', askForData())
+
+function askForData() {
+  // on load ask content script to send data here
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  chrome.tabs.sendMessage(tabs[0].id, {load: true});
+});
+}
+
 function message() {
+  // this function recieve data from content script
   chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log(request)
     listing(request)
   });
 }
@@ -16,7 +25,6 @@ function listing({links}) {
     ul.appendChild(li);
     li.innerHTML = links[i]
   }
-
 }
 
 message();

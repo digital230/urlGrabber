@@ -1,5 +1,5 @@
 
-function links() {
+function fetchLinks() {
   var links = document.querySelectorAll('[src],[href]');
   if (links && links.length > 0) {
     createListing(links);
@@ -25,7 +25,21 @@ function createListing(links) {
 }
 
 function sendToView(links) {
+  // send data to popup.html
   chrome.runtime.sendMessage({links});
 }
 
-links();
+function reload() {
+  /* recieve "send data" call from view and start
+    process of extracting links from dom main send back to popup.html
+  */
+  chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.load === true) {
+      fetchLinks();
+    }
+  });
+}
+
+fetchLinks();
+reload(); // get message from view
