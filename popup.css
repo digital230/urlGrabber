@@ -1,0 +1,38 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 300px;
+  height: auto;
+}
+
+.root {
+  max-height: 413px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+ul {
+  border: 1px solid;
+  list-style-type: none;
+  list-style:none;
+  padding-left:0;
+}
+
+li{
+  border: 1px solid;
+  min-height: 50px;
+  height: auto;
+  word-wrap: break-word;
+  line-height: 23px
+}
