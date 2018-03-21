@@ -18,31 +18,28 @@ function message() {
 
 function listing({links}) {
   let el = document.getElementById('root-ext-#');
-  // el.appendChild(div);
+  let TEXT = document.createTextNode("Download");
+  let DIV = document.createElement('div');
+  let IMG = document.createElement('img');
+  let BTN = document.createElement("BUTTON");
+
+  DIV.setAttribute('class', 'content-div');
+  BTN.setAttribute('class', 'btn');
+  IMG.setAttribute('class', 'image');
 
   for (let i = 0; i <links.length ; i++) {
-    let div = document.createElement('div');
-    let img = document.createElement('img');
-    // let p = document.createElement('p');
-    let btn = document.createElement("BUTTON");        // Create a <button> element
-    let btnText = document.createTextNode("Download");
-
-    // adding classes div
-    div.setAttribute('class', 'content-div');
-    btn.setAttribute('class', 'btn');
+    let div = DIV.cloneNode(true);
+    let img = IMG.cloneNode(true);
+    let btn = BTN.cloneNode(true);
+    let btnText = TEXT.cloneNode();
 
     //listener
     btn.addEventListener('click', downloadData.bind(null, links[i]));
 
     //img
-    img.setAttribute('class', 'image');
     img.src = links[i];
 
-    //p
-    // p.innerHTML = links[i];
-
     // appending
-    // div.appendChild(p);
     btn.appendChild(btnText);
     div.appendChild(img);
     div.appendChild(btn)
