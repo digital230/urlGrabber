@@ -1,5 +1,6 @@
 document.addEventListener('load', askForData())
 
+
 function askForData() {
   // on load ask content script to send data here
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -15,16 +16,67 @@ function message() {
   });
 }
 
-function listing({links}) {
+function listing({links, cUrl}) {
   let el = document.getElementById('root-ext-#');
-  let ul = document.createElement('ul');
-  el.appendChild(ul);
+  let TEXT = document.createTextNode("Download");
+  let DIV = document.createElement('div');
+  let IMG = document.createElement('img');
+  let BTN = document.createElement("BUTTON");
+
+  DIV.setAttribute('class', 'content-div');
+  BTN.setAttribute('class', 'btn');
+  IMG.setAttribute('class', 'image');
 
   for (let i = 0; i <links.length ; i++) {
-    let li = document.createElement('li');
-    ul.appendChild(li);
-    li.innerHTML = links[i]
+    let div = DIV.cloneNode(true);
+    let img = IMG.cloneNode(true);
+    let btn = BTN.cloneNode(true);
+    let btnText = TEXT.cloneNode();
+    let src = makeupLinks(links[i], cUrl);
+
+    //listener
+    btn.addEventListener('click', downloadData.bind(null, src));
+    // img.addEventListener('mouseover', onHover.bind(this, src));
+
+    //img
+    img.src = src;
+
+    // appending
+    btn.appendChild(btnText);
+    div.appendChild(img);
+    div.appendChild(btn)
+
+    el.appendChild(div);
   }
 }
 
+function makeupLinks(link, {origin, protocol}) {
+  let rgx = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
+  let arr = link.split('/');
+
+  if (rgx.test(link)) {
+    return link;
+  } else if (!rgx.test(link)) {
+
+    if (arr[0] === "" && arr[1] !== "") return `${origin}${link}`;
+    if (arr[0] === "" && arr[1] === "") return `${protocol}${link}`
+  }
+
+}
+
+// function onHover(src, e) {
+//   console.log(src);
+//   let div = document.createElement('div');
+//   let img = document.createElement('img');
+
+//   div.setAttribute('class', 'modal-div');
+//   img.src = src;
+//   div.appendChild(img)
+// }
+
+function downloadData(link, e) {
+  chrome.downloads.download({url: link, saveAs: true})
+}
+
 message();
+
