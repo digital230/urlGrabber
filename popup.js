@@ -36,6 +36,7 @@ function listing({links, cUrl}) {
 
     //listener
     btn.addEventListener('click', downloadData.bind(null, src));
+    // img.addEventListener('mouseover', onHover.bind(this, src));
 
     //img
     img.src = src;
@@ -62,6 +63,16 @@ function makeupLinks(link, {origin, protocol}) {
   }
 
 }
+
+// function onHover(src, e) {
+//   console.log(src);
+//   let div = document.createElement('div');
+//   let img = document.createElement('img');
+
+//   div.setAttribute('class', 'modal-div');
+//   img.src = src;
+//   div.appendChild(img)
+// }
 
 function downloadData(link, e) {
   chrome.downloads.download({url: link, saveAs: true})
