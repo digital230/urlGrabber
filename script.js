@@ -12,9 +12,9 @@ function createListing(links) {
     let item = links[i];
     let src;
     if (item.nodeName === 'IMG' || item.nodeName === 'A') {
-      src = item.getAttribute('src') || item.getAttribute('href')
+      src = item.getAttribute('src') || item.getAttribute('href');
       let type = src.split('.').pop();
-      if (type === 'jpg'||type === 'png') {
+      if (type === 'jpg'||type === 'png' || type === 'mp3') {
         arr.push(src)
       }
     }
@@ -26,7 +26,8 @@ function createListing(links) {
 
 function sendToView(links) {
   // send data to popup.html
-  chrome.runtime.sendMessage({links});
+  let obj = {origin: window.location.origin, protocol: window.location.protocol};
+  chrome.runtime.sendMessage({links, cUrl: obj}); // cUrl == current page url + protocal
 }
 
 function reload() {

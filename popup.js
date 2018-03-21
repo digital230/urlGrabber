@@ -16,7 +16,7 @@ function message() {
   });
 }
 
-function listing({links}) {
+function listing({links, cUrl}) {
   let el = document.getElementById('root-ext-#');
   let TEXT = document.createTextNode("Download");
   let DIV = document.createElement('div');
@@ -32,12 +32,13 @@ function listing({links}) {
     let img = IMG.cloneNode(true);
     let btn = BTN.cloneNode(true);
     let btnText = TEXT.cloneNode();
+    let src = makeupLinks(links[i], cUrl);
 
     //listener
-    btn.addEventListener('click', downloadData.bind(null, links[i]));
+    btn.addEventListener('click', downloadData.bind(null, src));
 
     //img
-    img.src = links[i];
+    img.src = src;
 
     // appending
     btn.appendChild(btnText);
@@ -46,9 +47,21 @@ function listing({links}) {
 
     el.appendChild(div);
   }
-
 }
 
+function makeupLinks(link, {origin, protocol}) {
+  let rgx = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
+  let arr = link.split('/');
+
+  if (rgx.test(link)) {
+    return link;
+  } else if (!rgx.test(link)) {
+
+    if (arr[0] === "" && arr[1] !== "") return `${origin}${link}`;
+    if (arr[0] === "" && arr[1] === "") return `${protocol}${link}`
+  }
+
+}
 
 function downloadData(link, e) {
   chrome.downloads.download({url: link, saveAs: true})
