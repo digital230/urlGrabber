@@ -87,7 +87,6 @@ function detectOtherTypesOfImages(link, {origin, protocol}) {
 // }
 
 function downloadData(link, e) {
-  console.log(link)
   chrome.downloads.download({url: link, saveAs: true})
 }
 

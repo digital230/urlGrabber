@@ -1,6 +1,6 @@
 
 function fetchLinks() {
-  var links = document.querySelectorAll('img[src], img[srcset],a[href],[background-image]');
+  var links = document.querySelectorAll('img[src], img[srcset],a[href],[background-image], i');
   if (links && links.length > 0) {
     createListing(links);
   }
@@ -8,12 +8,12 @@ function fetchLinks() {
 
 function createListing(links) {
   let arr = [];
-  let validItems = ['IMG', 'A', 'DIV'];
+  let validItems = ['IMG', 'A', 'I'];
   for(var i = 0; i < links.length ; i++) {
     let item = links[i];
+    // console.log(item)
     if (validItems.indexOf(item.nodeName) > -1 ) {
-      let {src, srcset} = extractUrlFromHtmlTags(item);
-      handleImagesUrlStacking(src, srcset, arr);
+      handleImagesUrlStacking(extractUrlFromHtmlTags(item), arr);
     }
   }
   if (arr.length > 0) {
@@ -54,6 +54,7 @@ function isValidUrl(url, type) {
 
 function extractUrlFromHtmlTags(item) {
   let srcset = [];
+  let backgroundImage = extractBackgroundImage(item)
   if (item.getAttribute('srcset')) {
     srcset = [item.getAttribute('srcset').split(',').pop()]; // here i reduce the urls of srcset to last one because page was hanging;
   }
@@ -61,17 +62,27 @@ function extractUrlFromHtmlTags(item) {
   || item.getAttribute('href')
   || item.getAttribute('background-image');
 
-  if (src) return {src, srcset};
-  return {src: 'no-src', srcset: []};
+  if (src) return {src, srcset, backgroundImage};
+  return {src: 'no-src', srcset: [], backgroundImage: null};
 }
 
-function handleImagesUrlStacking(src, srcset, arr) {
+function handleImagesUrlStacking({src, srcset, backgroundImage}, arr) {
   let type = src.split('.').pop();
 
   if (isValidUrl(src, type)) arr.push(src);
   if (!isValidUrl(src, type) && srcset.length > 0) Array.prototype.push.apply(arr, srcset);
+  if (backgroundImage) arr.push(backgroundImage);
 }
 
+function extractBackgroundImage(item) {
+  let img = item.querySelectorAll('[style]')[0];
+  let bcImage;
+  if (img) {
+    let style = img.currentStyle || window.getComputedStyle(img, false);
+    return style.backgroundImage.slice(4, -1).replace(/"/g, "");
+  }
+  return null;
+}
 
 
 fetchLinks();
