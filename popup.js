@@ -1,3 +1,9 @@
+document.addEventListener('load', $(function() {
+    $('.lazy').Lazy({
+      visibleOnly: true,
+    })
+  })
+)
 document.addEventListener('load', askForData())
 
 
@@ -81,6 +87,7 @@ function detectOtherTypesOfImages(link, {origin, protocol}) {
 // }
 
 function downloadData(link, e) {
+  console.log(link)
   chrome.downloads.download({url: link, saveAs: true})
 }
 

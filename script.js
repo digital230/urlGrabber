@@ -55,7 +55,7 @@ function isValidUrl(url, type) {
 function extractUrlFromHtmlTags(item) {
   let srcset = [];
   if (item.getAttribute('srcset')) {
-    srcset = item.getAttribute('srcset').split(',')
+    srcset = [item.getAttribute('srcset').split(',').pop()]; // here i reduce the urls of srcset to last one because page was hanging;
   }
   let src = item.getAttribute('src')
   || item.getAttribute('href')
