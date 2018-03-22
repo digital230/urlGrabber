@@ -14,9 +14,7 @@ function createListing(links) {
     if (item.nodeName === 'IMG' || item.nodeName === 'A') {
       src = item.getAttribute('src') || item.getAttribute('href');
       let type = src.split('.').pop();
-      if (type === 'jpg'||type === 'png' || type === 'mp3') {
-        arr.push(src)
-      }
+      if (isValidUrl(src, type)) arr.push(src)
     }
   }
   if (arr.length > 0) {
@@ -41,6 +39,21 @@ function reload() {
     }
   });
 }
+
+function isValidUrl(url, type) {
+  let validExts = ['jpg', 'png', 'mp3', 'mp4', 'jpeg'];
+  if (validExts.indexOf(type) > -1) return true;
+  if (validExts.indexOf(type) === -1) {
+    if (url.split(',')[0] === 'data:image/jpeg;base64') return true; // base64 img data
+  } else {
+    return false;
+  }
+
+}
+
+
+
+
 
 fetchLinks();
 reload(); // get message from view

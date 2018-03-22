@@ -50,18 +50,24 @@ function listing({links, cUrl}) {
   }
 }
 
-function makeupLinks(link, {origin, protocol}) {
+function makeupLinks(link, cUrl) {
   let rgx = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
-  let arr = link.split('/');
 
   if (rgx.test(link)) {
     return link;
-  } else if (!rgx.test(link)) {
-
-    if (arr[0] === "" && arr[1] !== "") return `${origin}${link}`;
-    if (arr[0] === "" && arr[1] === "") return `${protocol}${link}`
+  } else {
+    return detectOtherTypesOfImages(link, cUrl);
   }
+}
 
+function detectOtherTypesOfImages(link, {origin, protocol}) {
+  let arr = link.split('/');
+  let isBase64 = link.split(',')[0] === 'data:image/jpeg;base64';
+
+
+  if (isBase64) return link;
+  if (arr[0] === "" && arr[1] !== "") return `${origin}${link}`;
+  if (arr[0] === "" && arr[1] === "") return `${protocol}${link}`;
 }
 
 // function onHover(src, e) {
