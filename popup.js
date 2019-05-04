@@ -70,7 +70,6 @@ function detectOtherTypesOfImages(link, {origin, protocol}) {
   let arr = link.split('/');
   let isBase64 = link.split(',')[0] === 'data:image/jpeg;base64';
 
-
   if (isBase64) return link;
   if (arr[0] === "" && arr[1] !== "") return `${origin}${link}`;
   if (arr[0] === "" && arr[1] === "") return `${protocol}${link}`;
